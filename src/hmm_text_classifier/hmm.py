@@ -2,7 +2,8 @@ import numpy as np
 from hmmlearn import hmm
 from pathlib import Path
 import json
-from collections import Counter
+import random
+from collections import Counter, defaultdict
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -32,12 +33,28 @@ def calculateTransitionProbabilities(sequences):
     transition_matrix = counts / counts.sum(axis=1, keepdims=True)
     return transition_matrix
 
+def getDistribution(words):
+    d = defaultdict(int)
+    for word in words:
+        d[word] +=  1
+    
+    return d
+
 def convertToNestedIntegerArray(emissions_sequences):
-    dictionary = list(set([word for sequence in emissions_sequences for word in sequence]))
+    word_list = [word for sequence in emissions_sequences for word in sequence]
+    frequencies = getDistribution(word_list)
+    dictionary = list(set(word_list))
+    
+    # Used to help with OOV words
     map = {}
     map['<UNK>'] = 0
+    ctr = 1
     for i in range(1,len(dictionary) + 1):
-        map[dictionary[i-1]] = i
+        if frequencies[dictionary[i-1]] < 2 and random.choice([0,1]) == 1:
+            map[dictionary[i-1]] = 0
+        else:
+            map[dictionary[i-1]] = ctr
+            ctr += 1
         
     res = []
     for sequence in emissions_sequences:
@@ -52,11 +69,10 @@ def trainHmmModel(transition_matrix, emissions_sequences):
 
     lengths = [len(sequence) for sequence in emissions_sequences]
     emissions_sequence_ints, dictionary = convertToNestedIntegerArray(emissions_sequences=emissions_sequences)
-    print(emissions_sequence_ints)
     
     model = hmm.CategoricalHMM(
     n_components=2,
-    n_features=len(dictionary),
+    n_features=len(dictionary) + 1,
     init_params="e",
     params="e",
     )
