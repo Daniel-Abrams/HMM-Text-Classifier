@@ -1,0 +1,25 @@
+[project]
+name = "hmm-text-classifier"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Daniel-Abrams", email = "danlab1104@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "clean-text>=0.7.1",
+    "fsspec>=2026.9.0",
+    "hmmlearn>=0.3.3",
+    "huggingface-hub>=2.2.0",
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+    "pyarrow>=26.0.0",
+]
+
+[project.scripts]
+hmm-text-classifier = "hmm_text_classifier:main"
+
+[build-system]
+requires = ["uv_build>=0.12.6,<0.13.0"]
+build-backend = "uv_build"
