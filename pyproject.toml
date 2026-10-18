@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "bpetokenizer>=1.2.1",
     "clean-text>=0.7.1",
     "fsspec>=2026.9.0",
     "hmmlearn>=0.3.3",

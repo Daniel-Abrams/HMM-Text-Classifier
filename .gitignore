@@ -11,4 +11,5 @@ wheels/
 
 # Datasets
 data/mixed_dataset.csv
-data/training.json
+data/train.json
+data/test.json
